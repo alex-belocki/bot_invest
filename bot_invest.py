@@ -1,3 +1,4 @@
+import ast
 import logging
 import os
 import pytz
@@ -9,9 +10,10 @@ from telegram.ext import (CommandHandler, Defaults, ExtBot,
                           Filters, Updater)
 from telegram.utils.request import Request
 
-from config import get_token, TG_ADMIN_LIST, WEBHOOK
+from config import WEBHOOK
 from invest_bot.handlers import get_handlers_list
 from invest_bot.messages import *
+from invest_bot.utils import get_token
 
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(funcName)s - %(message)s',
@@ -47,6 +49,8 @@ def restart(update, context):
 def main():
     logging.info('Бот запускается.')
     dp = mybot.dispatcher
+
+    TG_ADMIN_LIST = ast.literal_eval(os.environ['TG_ADMIN_LIST'])
 
     dp.add_handler(
         CommandHandler(

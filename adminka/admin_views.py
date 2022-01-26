@@ -25,7 +25,7 @@ from invest_bot.models import *
 from invest_bot.tasks import (ban_member, send_email_campaign, 
                               send_withdraw_notif)
 from db import db
-from config import STATIC_FILES_DIR
+from config import DEV_MODE, STATIC_FILES_DIR
 
 
 class MyHomeView(AdminIndexView):
@@ -225,9 +225,11 @@ class TokenView(ModelView):
 
 class CampaignView(ModelView):
     create_modal = True
-    if 'MANJARO' not in platform.release():
+
+    if not DEV_MODE:
         can_edit = False
         can_delete = False
+
     column_display_pk = True
     column_default_sort = ('time', True)
     column_list = ('id', 'name', 'users_amount', 'time', 'status')
@@ -262,9 +264,10 @@ class CampaignView(ModelView):
 
 
 class MessageView(ModelView):
-    if 'MANJARO' not in platform.release():
+    if not DEV_MODE:
         can_delete = False
         can_create = False
+
     form_overrides = dict(text=TextAreaField,
                           image_path=ImageUploadField,
                           markup=TextAreaField)
@@ -292,7 +295,7 @@ class MessageView(ModelView):
 
 class ButtonView(ModelView):
     column_default_sort = ('id', True)
-    if 'MANJARO' not in platform.release():
+    if not DEV_MODE:
         can_delete = False
         can_create = False
         column_exclude_list = ('func_name', 'callback_data')

@@ -3,16 +3,18 @@ import logging
 import random
 
 from sqlalchemy import and_, desc, func
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.postgresql import DATE
 from telegram import ParseMode
 
+from config import engine
 from invest_bot.messages import (emoji_accumulative_balance,
                                  emoji_partner_balance,
                                  emoji_partners,
                                  emoji_trade_balance, 
                                  emoji_wallet, emoji_win)
-from invest_bot.models import (Button, Message, Program, Settings, TopUp, 
-                               Transaction, User, Withdraw)
+from invest_bot.models import (Button, Message, Program, Settings, Token, 
+                               TopUp, Transaction, User, Withdraw)
 from invest_bot.sql_queries import (super_partners_count_query, 
                                     top_partners_list_query)
 
@@ -400,3 +402,15 @@ def accrue_partnership_reward(session, super_partner, amount, withdraw=False):
                      user_id=super_partner.user_id)
     session.add(tr)
     return reward
+
+
+def get_token():
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    token = session\
+        .query(Token)\
+        .filter_by(name='Токены')\
+        .first()
+    session.close()
+    return token.telegram_token

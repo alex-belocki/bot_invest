@@ -2,7 +2,7 @@ from telegram.bot import Bot
 from telegram.ext import messagequeue as mq
 from telegram.utils.request import Request
 
-from config import get_token
+from invest_bot.utils import get_token
 
 
 class MQBot(Bot):

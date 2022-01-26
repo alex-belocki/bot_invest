@@ -4,6 +4,7 @@ import logging
 import os
 import traceback
 
+from dotenv import load_dotenv
 from celery import Celery
 from celery.schedules import crontab
 from sqlalchemy import and_, func
@@ -14,7 +15,7 @@ from telegram import (InlineKeyboardButton,
                       InputMediaDocument,
                       ParseMode)
 
-from config import DEV_MODE, engine, STATIC_FILES_DIR, QIWI_SECRET_KEY
+from config import DEV_MODE, engine, STATIC_FILES_DIR
 from invest_bot.messages import emoji_accumulative_balance
 from invest_bot.models import (SendMessageCampaign, Settings, Stat, 
                                TopUp, Transaction, User, Withdraw)
@@ -30,6 +31,7 @@ logging.basicConfig(
     filename='log.log'
     )
 
+load_dotenv()
 
 if DEV_MODE:
     broker = 'redis://localhost:6379/0'
@@ -133,7 +135,10 @@ def check_qiwi_payment():
             top_up.status = 'EXPIRED_'
             continue
 
-        result = get_payment_status(top_up.id, QIWI_SECRET_KEY)
+        result = get_payment_status(
+            top_up.id, 
+            os.environ.get('QIWI_SECRET_KEY')
+            )
         if not result:
             continue
 
