@@ -1,0 +1,14 @@
+celery==5.2.3
+Flask
+Flask-Admin
+Flask-Login
+Flask-SQLAlchemy
+Flask-WTF
+Pillow
+psycopg2-binary
+python-dotenv
+python-telegram-bot
+redis==4.1.0
+requests==2.27.1
+SQLAlchemy
+WTForms==2.3.3

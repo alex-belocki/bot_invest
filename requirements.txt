@@ -1,0 +1,6 @@
+alembic
+psycopg2-binary
+python-dotenv
+python-telegram-bot
+requests==2.26.0
+SQLAlchemy
