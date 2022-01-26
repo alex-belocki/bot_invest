@@ -1,23 +1,16 @@
 from datetime import datetime, timedelta
 import logging
-import os
-from pytz import timezone
 import random
-import traceback
 
 from sqlalchemy import and_, desc, func
 from sqlalchemy.dialects.postgresql import DATE
 from telegram import ParseMode
 
-from config import STATIC_FILES_DIR
-from invest_bot.messages import (sex_emoji_male, 
-                                 sex_emoji_female,
-                                 emoji_accumulative_balance,
+from invest_bot.messages import (emoji_accumulative_balance,
                                  emoji_partner_balance,
                                  emoji_partners,
                                  emoji_trade_balance, 
-                                 emoji_wallet,
-                                 emoji_win)
+                                 emoji_wallet, emoji_win)
 from invest_bot.models import (Button, Message, Program, Settings, TopUp, 
                                Transaction, User, Withdraw)
 from invest_bot.sql_queries import (super_partners_count_query, 
@@ -26,8 +19,8 @@ from invest_bot.sql_queries import (super_partners_count_query,
 
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(funcName)s - %(message)s',
-    level = logging.INFO,
-    filename = 'log.log'
+    level=logging.INFO,
+    filename='log.log'
     )
 
 
@@ -132,63 +125,8 @@ def send_text_msg(update=None,
     return msg
 
 
-def send_photo_msg(update=None, 
-                   context=None, 
-                   slug=None, 
-                   session=None, 
-                   chat_id=None,
-                   bot=None,
-                   **kwargs):
-    '''Отправляет фото-сообщение'''
-    if update:
-        query = update.callback_query
-        if query:
-            chat_id = query.message.chat_id
-        else:
-            chat_id = update.message.chat_id
-
-    message = session.query(Message).filter_by(slug=slug).first()
-    telegram_id = getattr(message, 'image_id')
-    if telegram_id:
-        photo = telegram_id
-    else:
-        path = os.path.join(STATIC_FILES_DIR, 
-                            getattr(message, 'image_path'))
-        photo = open(path, 'rb')
-
-    msg = None
-    if context:
-        try:
-            msg = context.bot.send_photo(
-                chat_id=chat_id,
-                photo=photo,
-                caption=message.text.format(**kwargs),
-                reply_markup=message.keyboard(**kwargs),
-                parse_mode=ParseMode.HTML
-                )
-        except Exception:
-            logging.info(str(traceback.format_exc()))
-
-    else:
-        try:
-            msg = bot.send_photo(
-                chat_id=chat_id,
-                photo=photo,
-                caption=message.text.format(**kwargs),
-                reply_markup=message.keyboard(**kwargs),
-                parse_mode=ParseMode.HTML
-                )
-        except Exception:
-            logging.info(str(traceback.format_exc()))
-
-    if not telegram_id and msg:
-        setattr(message, 'image_id', msg.photo[-1].file_id)
-        session.commit()
-
-    return msg
-
-
 def is_subscribed(user_id, context, session):
+    '''Проверяет или подписан на чат и канал '''
     settings = session.query(Settings).filter_by(name='Настройки').first()
 
     chat_id_list = [settings.chat_id, settings.channel_id]
@@ -237,10 +175,14 @@ def get_top_investors_message_dict(session, user_id) -> dict:
         if count in [3, 10]:
             new_str_snipp += '\n'
 
-        text += f'{str(count).zfill(2)}. {emoji_trade_balance} <b>{num_fmt(round(user.trade_balance))} ₽ {user.sex_emoji} ID:{user.user_id}</b>{new_str_snipp}'
+        rate = str(count).zfill(2)
+        user_balance = num_fmt(round(user.trade_balance))
+        text += f'{rate}. {emoji_trade_balance} <b>{user_balance} ₽ '\
+                f'{user.sex_emoji} ID:{user.user_id}</b>{new_str_snipp}'
 
         if user.user_id == user_id:
-            last_str = f'{str(count).zfill(2)}. {emoji_trade_balance} <b>{num_fmt(round(user.trade_balance))} ₽ {user.sex_emoji} ID:{user.user_id}</b>'
+            last_str = f'{rate}. {emoji_trade_balance} <b>{user_balance} ₽ '\
+                       f'{user.sex_emoji} ID:{user.user_id}</b>'
 
         if count <= 25:
             message_dict[1] = text.strip()
@@ -273,7 +215,9 @@ def get_top_partners_message_dict(session, user_id) -> dict:
     text = str()
     message_dict = dict()
     last_str = str()
-    for count, super_partner_id, partners_cnt, sex in session.execute(raw_query):
+    for count, super_partner_id, partners_cnt, sex in \
+            session.execute(raw_query):
+
         new_str_snipp = '\n'
         if count in [3, 10]:
             new_str_snipp += '\n'
@@ -281,10 +225,14 @@ def get_top_partners_message_dict(session, user_id) -> dict:
         sex_emoji = settings.sex_emoji_male if sex == 'male' \
             else settings.sex_emoji_female
 
-        text += f'{str(count).zfill(2)}. {emoji_partners} <b>{num_fmt(partners_cnt)} {sex_emoji} ID:{super_partner_id}</b>{new_str_snipp}'
+        rate = str(count).zfill(2)
+        cnt = num_fmt(partners_cnt)
+        text += f'{rate}. {emoji_partners} <b>{cnt} {sex_emoji} '\
+                f'ID:{super_partner_id}</b>{new_str_snipp}'
 
         if super_partner_id == user_id:
-            last_str = f'{str(count).zfill(2)}. {emoji_partners} <b>{num_fmt(partners_cnt)} {sex_emoji} ID:{super_partner_id}</b>'
+            last_str = f'{rate}. {emoji_partners} <b>{cnt} {sex_emoji} '\
+                       f'ID:{super_partner_id}</b>'
 
         if count <= 25:
             message_dict[1] = text.strip()
@@ -406,15 +354,6 @@ def calc_partners_data(user, session):
     if not last_7_days_sum:
         last_7_days_sum = 0
 
-    # сумма, выплаченная за всё время
-    # all_sum = session.query(func.sum(Transaction.sum)).filter(
-    #     and_(Transaction.user_id == user.user_id,
-    #          Transaction.name == 'Accrual of partner remuneration',
-    #          Transaction.status == 'done')
-    #     ).first()[0]
-    # if not all_sum:
-    #     all_sum = 0
-
     if user.partners_list:
         text = ''
         for partner in user.partners_list:
@@ -461,5 +400,3 @@ def accrue_partnership_reward(session, super_partner, amount, withdraw=False):
                      user_id=super_partner.user_id)
     session.add(tr)
     return reward
-
-

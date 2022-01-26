@@ -1,24 +1,18 @@
-import ast
 from datetime import datetime, timedelta
 import os
 import platform
 import sys
 
-from flask import flash, redirect, request, url_for
-from flask_admin import AdminIndexView, BaseView, expose
+from flask import flash, redirect, url_for
+from flask_admin import AdminIndexView, expose
 from flask_admin.babel import gettext
 from flask_admin.contrib.sqla import ModelView
-from flask_admin.form import FileUploadField, ImageUploadField, rules
-from flask_admin.form.upload import thumbgen_filename
-from flask_admin.helpers import get_redirect_target
+from flask_admin.form import ImageUploadField
 from flask_admin.menu import MenuLink
-from flask_admin.model.helpers import get_mdict_item_or_list
 from flask_login import current_user, login_user, logout_user
-from markupsafe import Markup
-from wtforms import StringField, TextAreaField
-from wtforms.validators import DataRequired, Regexp
+from wtforms import TextAreaField
 from werkzeug.security import generate_password_hash
-from sqlalchemy import and_, func, or_
+from sqlalchemy import and_, func
 from sqlalchemy.dialects.postgresql import DATE
 
 parent_dir = os.path.abspath(os.path.dirname(__file__))
@@ -30,7 +24,6 @@ from adminka.utils import FilterPaidPayments
 from invest_bot.models import *
 from invest_bot.tasks import (ban_member, send_email_campaign, 
                               send_withdraw_notif)
-from invest_bot.utils import send_text_msg
 from db import db
 from config import STATIC_FILES_DIR
 
@@ -57,7 +50,8 @@ class MyHomeView(AdminIndexView):
     def process_login(self):
         form = LoginForm()
         if form.validate_on_submit():
-            user = AdminModel.query.filter_by(username=form.username.data).first()
+            user = AdminModel.query\
+                .filter_by(username=form.username.data).first()
             if user and user.check_password(form.password.data):
                 login_user(user, remember=form.remember_me.data)
                 flash('Вы вошли на сайт')
@@ -78,8 +72,6 @@ class MyHomeView(AdminIndexView):
 
 class UserView(ModelView):
     column_display_pk = True
-    list_template = 'admin/user/list.html'
-
     column_exclude_list = ('date_trade_balance_upd', 
                            'program', 'previous_program', 
                            'first_name', 'last_partner_registered',
@@ -109,7 +101,7 @@ class UserView(ModelView):
                          )
 
     def render(self, template, **kwargs):
-        if template == 'admin/user/list.html':
+        if template == 'admin/model/list.html':
             list_columns = [
                 ('all_top_ups', '+ пополнено'),
                 ('all_withdraws', '- выведено'),
@@ -387,7 +379,6 @@ class WithdrawView(ModelView):
             return False
         else:
 
-            # the model got committed now run our check:
             if form.is_paid:
                 if new_is_paid != old_is_paid and new_is_paid is True:
                     send_withdraw_notif.delay(model.id)
@@ -540,8 +531,6 @@ class StatView(ModelView):
         kwargs['live_row'] = live_row
         kwargs['total_row'] = total_row
         return super(StatView, self).render(template, **kwargs)
-
-
 
 
 class AdminView(ModelView):

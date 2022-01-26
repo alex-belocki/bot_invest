@@ -5,7 +5,7 @@ from telegram.ext import (CallbackQueryHandler, CommandHandler,
                           ConversationHandler, Filters, 
                           MessageHandler)
 
-from config import engine, TG_ADMIN_LIST
+from config import engine
 import invest_bot.callbacks.calculator as calculator
 import invest_bot.callbacks.callbacks as callbacks
 import invest_bot.callbacks.show_account as show_account
@@ -24,37 +24,16 @@ def get_sorted_handlers_list(loc):
     return [loc[key] for key in sorted_keys]
 
 
-SLUGS_LIST = ['btn_account', 'btn_wallet', 'btn_partners',
-              'btn_calc', 'btn_top', 'btn_search', 'btn_cancel']
-
-
-def get_stop_conv_pattern(session):
-
-    buttons_list = session.query(Button)\
-        .filter(Button.slug.in_(SLUGS_LIST))
-
-    pattern = ''
-    for button in buttons_list:
-        pattern += f'^({button.text})$|'
-
-    return pattern[:-1]
-
-
-def get_exclude_menu_pattern(session):
-    buttons_list = session.query(Button)\
-        .filter(Button.slug.in_(SLUGS_LIST))
-
-    pattern = '^((?!'
-    for button in buttons_list:
-        pattern += f'{button.text}|'
-
-    tail = ').)*$'
-    return pattern[:-1] + tail
-
-
 def get_menu_handlers_list(session):
+    ''' 
+    Список обработчиков, чтобы можно было досрочно 
+    завершить диалог. Добавляется в ConversationHandler в начало списка
+    '''
+    slugs_list = ['btn_account', 'btn_wallet', 'btn_partners',
+                  'btn_calc', 'btn_top', 'btn_search', 'btn_cancel']
+
     buttons_list = session.query(Button)\
-        .filter(Button.slug.in_(SLUGS_LIST))
+        .filter(Button.slug.in_(slugs_list))
 
     handlers_list = list()
     for button in buttons_list:
@@ -230,8 +209,10 @@ def get_handlers_list():
     h_18 = CallbackQueryHandler(show_account.show_c,
                                 pattern='^c$')
 
-    h_19 = CallbackQueryHandler(show_account.change_sex,
-                                pattern='^change_sex_(мужской|женский|МУЖСКОЙ|ЖЕНСКИЙ)$')
+    h_19 = CallbackQueryHandler(
+        show_account.change_sex,
+        pattern='^change_sex_(мужской|женский|МУЖСКОЙ|ЖЕНСКИЙ)$'
+        )
 
     button = get_button(session, 'btn_wallet')
     h_20 = MessageHandler(Filters.regex(f'^({button.text})$'), 
@@ -273,13 +254,8 @@ def get_handlers_list():
     h_28 = CallbackQueryHandler(callbacks.proceed_check,
                                 pattern='^proceed_check$')
 
-
-
-
-
     h_55 = CommandHandler('start', callbacks.start)
     h_56 = MessageHandler(Filters.regex('^/get_id$'), callbacks.get_my_id)
-
 
     h_999 = MessageHandler(Filters.text, callbacks.end_conversation)
 
@@ -287,7 +263,3 @@ def get_handlers_list():
 
     session.close()
     return get_sorted_handlers_list(loc)
-
-# MessageHandler(Filters.user(TG_ADMIN_LIST), send_admin_message_to_user)
-
-# MessageHandler(Filters.text & (~ Filters.user(TG_ADMIN_LIST)), send_all_user_messages_to_admin)

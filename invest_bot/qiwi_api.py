@@ -1,4 +1,3 @@
-import json
 import logging
 import requests
 import traceback
@@ -9,8 +8,8 @@ from invest_bot.utils import get_exp_date
 
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(funcName)s - %(message)s',
-    level = logging.INFO,
-    filename = 'log.log'
+    level=logging.INFO,
+    filename='log.log'
     )
 
 

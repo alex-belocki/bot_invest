@@ -1,5 +1,4 @@
 from sqlalchemy.orm import sessionmaker
-from telegram.ext import ConversationHandler
 
 from config import engine
 from invest_bot.models import Settings

@@ -1,5 +1,3 @@
-import os
-
 from telegram.bot import Bot
 from telegram.ext import messagequeue as mq
 from telegram.utils.request import Request

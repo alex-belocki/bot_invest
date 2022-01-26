@@ -2,7 +2,6 @@ import ast
 from datetime import datetime, timedelta
 import logging
 import os
-import platform
 import traceback
 
 from celery import Celery
@@ -15,7 +14,7 @@ from telegram import (InlineKeyboardButton,
                       InputMediaDocument,
                       ParseMode)
 
-from config import engine, STATIC_FILES_DIR, QIWI_SECRET_KEY
+from config import DEV_MODE, engine, STATIC_FILES_DIR, QIWI_SECRET_KEY
 from invest_bot.messages import emoji_accumulative_balance
 from invest_bot.models import (SendMessageCampaign, Settings, Stat, 
                                TopUp, Transaction, User, Withdraw)
@@ -27,15 +26,16 @@ from invest_bot.qiwi_api import get_payment_status
 
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(funcName)s - %(message)s',
-    level = logging.INFO,
-    filename = 'log.log'
+    level=logging.INFO,
+    filename='log.log'
     )
 
 
-if 'MANJARO' in platform.release():
+if DEV_MODE:
     broker = 'redis://localhost:6379/0'
 else:
-    broker = f'redis://default:{os.environ.get("CELERY_PASSWORD")}@localhost:6379/0'
+    passwd = os.environ.get('CELERY_PASSWORD')
+    broker = f'redis://default:{passwd}@localhost:6379/0'
 
 app = Celery('tasks', broker=broker)
 app.conf.timezone = 'Europe/Moscow'
@@ -423,20 +423,3 @@ def setup_periodic_tasks(sender, **kwargs):
         crontab(hour=0, minute=1), 
         update_stat.s()
         )
-
-
-    # sender.add_periodic_task(
-    #     crontab(minute='*/1'), 
-    #     get_1clancer_posts.s()
-    #     )
-
-
-# В маленьких проектах
-# celery -A tasks worker -B --loglevel=INFO
-
-# В больших проектах
-# celery -A tasks beat
-
-# Запуск celery worker server
-# celery -A tasks worker --loglevel=INFO
-

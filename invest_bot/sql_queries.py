@@ -85,6 +85,3 @@ top_partners_list_query = '''
     ORDER BY row_num
     LIMIT 100
 '''
-
-
-

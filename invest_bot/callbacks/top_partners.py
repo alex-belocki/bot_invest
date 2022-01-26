@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from config import engine
 from invest_bot.kb import top_info_ikb
 from invest_bot.models import Message
-from invest_bot.utils import get_top_partners_message_dict, send_text_msg
+from invest_bot.utils import get_top_partners_message_dict
 
 
 def show_partners_top(update, context):

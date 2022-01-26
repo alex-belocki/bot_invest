@@ -19,7 +19,8 @@ def show_partners(update, context):
         .query(User)\
         .filter_by(user_id=user_id)\
         .first()
-    refferal_url = f'https://t.me/{context.bot.username}?start={user.refferal_link}'
+    refferal_url = f'https://t.me/{context.bot.username}?'\
+                   f'start={user.refferal_link}'
 
     settings = session.query(Settings).filter_by(name='Настройки').first()
 

@@ -135,8 +135,6 @@
                 {% endfor %}
         </tr>
 
-
-
         {% for row in data %}
         <tr>
             {% block list_row scoped %}
@@ -156,7 +154,6 @@
                     </td>
                     {%- endif -%}
                 {% endblock %}
-
 
                 {% for c, name in list_columns %}
                     <td class="col-{{c}}">

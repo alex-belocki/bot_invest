@@ -37,7 +37,8 @@ def show_investors_top(update, context):
         context.bot.edit_message_text(chat_id=user_id,
                                       message_id=context.user_data['msg_id'],
                                       text=text,
-                                      reply_markup=top_info_ikb(items_count, investors=True))
+                                      reply_markup=top_info_ikb(items_count, 
+                                                                investors=True))
         del context.user_data['from_partners']
     else:
         msg = send_text_msg(update, context,
@@ -45,7 +46,8 @@ def show_investors_top(update, context):
                             session=session,
                             investors_list=investors_list[1],
                             user_rate=last_str,
-                            reply_markup=top_info_ikb(items_count, investors=True))
+                            reply_markup=top_info_ikb(items_count, 
+                                                      investors=True))
         context.user_data['msg_id'] = msg.message_id
 
     if context.user_data.get('is_conv'):
@@ -81,5 +83,3 @@ def navigate_investors_top(update, context):
                                     investors=True, 
                                     screen_num=screen_num)
                                   )
-
-

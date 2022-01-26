@@ -5,11 +5,9 @@ from sqlalchemy.orm import sessionmaker
 from telegram.ext import ConversationHandler
 
 from config import engine
-from invest_bot.messages import sex_emoji_male, sex_emoji_female
-from invest_bot.models import Message, Settings, User
+from invest_bot.models import Settings, User
 from invest_bot.utils import (check_if_subscribed,
                               generate_refferal_link, 
-                              is_subscribed, 
                               send_text_msg)
 
 logging.basicConfig(

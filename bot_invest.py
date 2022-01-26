@@ -13,7 +13,6 @@ from config import get_token, TG_ADMIN_LIST, WEBHOOK
 from invest_bot.handlers import get_handlers_list
 from invest_bot.messages import *
 
-
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(funcName)s - %(message)s',
     level=logging.INFO,
@@ -22,7 +21,6 @@ logging.basicConfig(
 
 aps_logger = logging.getLogger('apscheduler')
 aps_logger.setLevel(logging.WARNING)
-
 
 defaults = Defaults(
     tzinfo=pytz.timezone('Europe/Moscow'),
@@ -37,8 +35,6 @@ mybot = Updater(bot=ext_bot)
 
 
 def stop_and_restart():
-    """Gracefully stop the Updater and replace the current 
-    process with a new one"""
     mybot.stop()
     os.execl(sys.executable, sys.executable, *sys.argv)
 
@@ -64,7 +60,7 @@ def main():
         dp.add_handler(handler)
 
     if WEBHOOK:
-        webhook_domain = 'https://ya.ru'
+        webhook_domain = 'https://some-url.com'
         PORT = 5004
 
         mybot.start_webhook(listen='127.0.0.1',

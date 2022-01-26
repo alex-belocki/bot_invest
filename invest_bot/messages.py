@@ -11,11 +11,3 @@ emoji_renew = '🔄'
 
 msg_top_partners = f'{emoji_partners} ТОП ПАРТНЁРОВ'
 msg_top_investors = f'{emoji_trade_balance} ТОП ИГРОКОВ'
-
-
-
-
-
-
-
-

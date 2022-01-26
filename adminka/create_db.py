@@ -4,7 +4,6 @@ from werkzeug.security import generate_password_hash
 
 from flaskapp import app, db, AdminModel
 
-
 db.create_all(app=app)
 
 password = getpass('Введите пароль админа: ')

@@ -16,7 +16,6 @@ from invest_bot.sql_queries import (raw_without_parnters_query,
 
 Base = declarative_base()
 
-
 message_button = Table(
     "message_button",
     Base.metadata,
@@ -443,14 +442,6 @@ class Transaction(Base):
     withdraw = relationship('Withdraw')
     user = relationship('User', back_populates='transactions_list')
 
-# возможные статусы:
-# Daily accrual of profit
-# Accrual of partner remuneration  # Начисление партнерского вознаграждения
-# Replenishment  # Пополнение
-# Withdrawal  # Вывод
-# Collect accumulative balance | Collect partner balance
-# Invest from wallet to trade_balance
-
 
 class Stat(Base):
     __tablename__ = 'stat'
@@ -478,5 +469,3 @@ class Stat(Base):
     all_partner_balance_sum = Column(Numeric(asdecimal=False), 
                                      nullable=False, 
                                      default=0)
-
-

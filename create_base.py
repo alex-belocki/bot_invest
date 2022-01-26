@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
 import random
+
+from dotenv import load_dotenv
 
 from sqlalchemy import and_
 from sqlalchemy.orm import sessionmaker
@@ -8,14 +9,10 @@ from sqlalchemy.orm import sessionmaker
 load_dotenv()
 
 from config import engine
-from invest_bot.models import *
+from invest_bot.models import Base, Program, Settings, User
 from invest_bot.utils import generate_refferal_link
 
-
-
-
 Base.metadata.create_all(engine)
-
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -79,10 +76,3 @@ for user_id in range(4, 100):
         session.add(user)
 
 session.commit()
-
-
-
-
-
-
-

@@ -1,6 +1,6 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-from invest_bot.messages import *
+from invest_bot.messages import emoji_win, msg_top_investors, msg_top_partners
 
 
 def top_info_ikb(items_count, screen_num=1, 
@@ -27,7 +27,8 @@ def top_info_ikb(items_count, screen_num=1,
                                              callback_data=f'top_{prefix}_2')]
 
     elif screen_num == 2:
-        ikb_list = [InlineKeyboardButton(f'« {emoji_win} 1-25', callback_data=f'top_{prefix}_1')]
+        ikb_list = [InlineKeyboardButton(f'« {emoji_win} 1-25', 
+                                         callback_data=f'top_{prefix}_1')]
         if 51 <= items_count < 75:
             ikb_list.append(
                 InlineKeyboardButton(f'{emoji_win} 51-{items_count} »', 

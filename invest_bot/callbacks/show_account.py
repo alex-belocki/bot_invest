@@ -198,4 +198,3 @@ def change_sex(update, context):
                   slug='msg_tmp',
                   session=session,
                   sex_emoji=user.sex_emoji)
-

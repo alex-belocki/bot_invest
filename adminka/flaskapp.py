@@ -6,7 +6,6 @@ sys.path.append(os.path.dirname(parent_dir))
 import logging
 
 from dotenv import load_dotenv
-
 from flask import Flask, render_template, request
 from flask_admin import Admin
 from flask_login import current_user, LoginManager
@@ -17,8 +16,8 @@ from db import db
 
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(funcName)s - %(message)s',
-    level = logging.INFO,
-    filename = 'log.log'
+    level=logging.INFO,
+    filename='log.log'
     )
 
 load_dotenv()
@@ -27,10 +26,6 @@ app = Flask(__name__)
 
 app.config.from_pyfile('conf.py')
 db.init_app(app)
-
-
-# db.create_all(app=app)
-
 
 login_manager = LoginManager()
 login_manager.init_app(app)
