@@ -231,7 +231,7 @@ class CampaignView(ModelView):
     column_display_pk = True
     column_default_sort = ('time', True)
     column_list = ('id', 'name', 'users_amount', 'time', 'status')
-    create_modal_template = ('admin/campaign/create-modal.html')
+    create_modal_template = 'admin/campaign/create-modal.html'
 
     column_labels = dict(name='Название',
                          users_amount='Кол-во пользователей',
