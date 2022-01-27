@@ -264,25 +264,20 @@ class CampaignView(ModelView):
 
 
 class MessageView(ModelView):
-    if not DEV_MODE:
-        can_delete = False
-        can_create = False
+    can_delete = False
+    can_create = False
 
     form_overrides = dict(text=TextAreaField,
-                          image_path=ImageUploadField,
                           markup=TextAreaField)
-    form_args = dict(image_path=dict(base_path=STATIC_FILES_DIR,
-                                     relative_path='files/images/'))
+
     form_widget_args = dict(text=dict(rows=8),
                             markup=dict(rows=4))
-    form_columns = ('slug', 'text', 'image_path', 
-                    'buttons_list', 'markup')
-    column_exclude_list = ('image_id',)
+    form_columns = ('slug', 'text', 'buttons_list', 'markup')
+    column_exclude_list = ('image_id', 'image_path')
     column_searchable_list = ('slug', 'text')
     column_default_sort = ('id', True)
 
     column_labels = dict(text='Текст',
-                         image_path='Изображение',
                          buttons_list='Кнопки',
                          markup='Разметка')
 
@@ -294,15 +289,13 @@ class MessageView(ModelView):
 
 
 class ButtonView(ModelView):
+    can_delete = False
+    can_create = False
     column_default_sort = ('id', True)
-    if not DEV_MODE:
-        can_delete = False
-        can_create = False
-        column_exclude_list = ('func_name', 'callback_data')
-        form_excluded_columns = ('func_name', 'callback_data')
-    else:
-        column_editable_list = ('func_name', 'callback_data')
+    column_exclude_list = ('callback_data',)
+    form_excluded_columns = ('callback_data',)
     column_searchable_list = ('slug',)
+
     column_labels = dict(message='Сообщение',
                          text='Текст',
                          type_='Тип',

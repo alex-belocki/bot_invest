@@ -373,7 +373,6 @@ class Button(Base):
     type_ = Column(String(6), nullable=False, default='inline')
     callback_data = Column(String)
     inline_url = Column(String)
-    func_name = Column(String)
     message_id = Column(Integer, ForeignKey('messages.id'))
 
     message = relationship('Message', 

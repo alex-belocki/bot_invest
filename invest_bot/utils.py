@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.postgresql import DATE
 from telegram import ParseMode
 
-from config import engine
+from config import DEV_MODE, engine
 from invest_bot.messages import (emoji_accumulative_balance,
                                  emoji_partner_balance,
                                  emoji_partners,
@@ -129,6 +129,9 @@ def send_text_msg(update=None,
 
 def is_subscribed(user_id, context, session):
     '''Проверяет или подписан на чат и канал '''
+    if DEV_MODE:
+        return True
+
     settings = session.query(Settings).filter_by(name='Настройки').first()
 
     chat_id_list = [settings.chat_id, settings.channel_id]

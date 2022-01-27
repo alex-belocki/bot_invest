@@ -14,12 +14,12 @@ DEV_MODE = True
 
 if DEV_MODE:
     DOMAIN_NAME = 'http://127.0.0.1:5000'
+    engine = create_engine('sqlite:///base.db')
 else:
     DOMAIN_NAME = 'https://ya.ru'
-
-DB_URL = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'\
-    .format(user=os.environ['POSTGRES_USER'],
-            pw=os.environ['POSTGRES_PW'],
-            url=os.environ['POSTGRES_URL'],
-            db=os.environ['POSTGRES_DB'])
-engine = create_engine(DB_URL, pool_size=10, max_overflow=20)
+    DB_URL = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'\
+        .format(user=os.environ['POSTGRES_USER'],
+                pw=os.environ['POSTGRES_PW'],
+                url=os.environ['POSTGRES_URL'],
+                db=os.environ['POSTGRES_DB'])
+    engine = create_engine(DB_URL, pool_size=10, max_overflow=20)

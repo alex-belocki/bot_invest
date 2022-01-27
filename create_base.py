@@ -48,8 +48,12 @@ settings = session\
     .first()
 
 if not settings:
-    settings = Settings(refferal_url='https://yandex.ru',
-                        support_url='https://yandex.ru')
+    settings = Settings(refferal_url='https://some-url.com',
+                        support_url='https://another-url.com',
+                        chat_url='https://t.me/chat-url-to-subscribe',
+                        chat_id=-123456789,
+                        channel_url='https://t.me/channel-url-to-subscribe',
+                        channel_id=-987654321)
     session.add(settings)
 
 

@@ -162,7 +162,7 @@ def get_handlers_list():
     btn_female_sex = get_button(session, 'btn_female_sex', account_emoji=True)
     h_4 = MessageHandler(
         Filters.regex(f'^({btn_male_sex.text}|{btn_female_sex.text})$'), 
-        getattr(callbacks, btn_male_sex.func_name or btn_female_sex.func_name)
+        callbacks.get_sex
         )
 
     button = get_button(session, 'btn_top')
