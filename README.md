@@ -1,7 +1,17 @@
 # bot_invest
-🏆 MILLIONER GAME — tool for making money. Users invite other users and receive affiliate rewards from all their deposits and withdrawals
+🏆 MILLIONER GAME — tool for making money. Users invite other users and receive affiliate rewards from all their deposits and withdrawals.
 
-Stack:
+One of the interesting projects I've done as a freelancer.
+
+## Main functions
+
+- mailing to all bot members
+- referral program
+- accepting payments via QIWI (qiwi api)
+- the ability to edit all messages and buttons of the bot from the admin panel
+- statistics
+
+### Stack:
 
 - sqlalchemy
 - celery
