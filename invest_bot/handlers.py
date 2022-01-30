@@ -256,6 +256,7 @@ def get_handlers_list():
 
     h_55 = CommandHandler('start', callbacks.start)
     h_56 = MessageHandler(Filters.regex('^/get_id$'), callbacks.get_my_id)
+    h_57 = CommandHandler('invite', callbacks.invite)
 
     h_999 = MessageHandler(Filters.text, callbacks.end_conversation)
 

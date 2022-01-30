@@ -8,7 +8,7 @@ SECRET_KEY = 'dfkFFSd112df$$&jfd#@'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 if DEV_MODE:
-    base_path = os.path.abspath(os.path.join(__file__, '../..', 'base.db'))
+    base_path = os.path.abspath(os.path.join(__file__, '../..', 'sample.db'))
     DB_URL = f'sqlite:///{base_path}'
 else:
     def get_env_variable(name):

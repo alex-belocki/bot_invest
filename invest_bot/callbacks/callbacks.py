@@ -175,5 +175,20 @@ def proceed_check(update, context):
         pass
 
 
+def invite(update, context):
+    '''Получить ссылку на регистрацию в боте '''
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    user = session\
+        .query(User)\
+        .filter_by(user_id=2)\
+        .first()
+
+    refferal_url = f'https://t.me/{context.bot.username}?'\
+                   f'start={user.refferal_link}'
+    update.message.reply_text(f'Ваша пригласительная ссылка: {refferal_url}')
+
+
 def end_conversation(update, context):
     return ConversationHandler.END
