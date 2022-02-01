@@ -11,13 +11,17 @@ One of the interesting projects I've done as a freelancer.
 - the ability to edit all messages and buttons of the bot from the admin panel
 - statistics
 
-### Stack:
+#### Stack:
 
 - sqlalchemy
 - celery
 - redis
 - python-telegram-bot
 - flask-admin
+
+## Video review
+
+[![IMAGE ALT TEXT](https://python-developer.ru/static/youtube-prev.png)](https://www.youtube.com/watch?v=x4bmMBc02zU "Review of the telegram bot bot_invest")
 
 ## Installation
 1. Clone repository:
